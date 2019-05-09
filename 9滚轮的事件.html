@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>滚轮的事件</title>
+	<style>
+		#box1{
+			width: 100px;
+			height: 100px;
+			background-color: red;
+		}
+	</style>
+	<script>
+		window.onload = function(){
+			var box1 = document.getElementById('box1');
+			// onmousewheel  鼠标滚轮滚动事件 火狐不兼容
+			//在火狐中需要使用DOMMouseScroll绑定滚动事件 需要通过addEventListener使用
+			box1.onmousewheel = function(e){
+				//判断滚轮滚动方向
+				e = e || window.e;
+				// e.wheelDelta可以获取到鼠标滚轮的滚动方向
+				//向上为正值，向下为负值 火狐不支持
+				// e.wheelDelta
+
+				//火狐使用e.detail 向上为负 向下为正
+				// e.detail
+
+				if(e.wheelDelta > 0 || e.detail < 0){
+					box1.style.height = box1.clientHeight - 10 + "px";
+				}else{
+					box1.style.height = box1.clientHeight + 10 + "px";
+
+				}
+
+				//在addEventListener中取消默认行为不能用return false；
+				//使用e.preventDefault来取消默认行为
+
+				e.preventDefault && e.preventDefault();
+
+				return false;
+			}
+
+			bind(box1,"DOMMouseScroll",box1.onmousewheel);
+
+			function bind(obj,eventStr,callback){
+				if(obj.addEventListener){
+					obj.addEventListener(eventStr,callback,false);
+				}else{
+					obj.attachEvent("on"+eventStr,function(){
+						callback.call(obj);
+					})
+				}
+
+			}
+		}
+	</script>
+</head>
+<body style="height: 2000px;">
+	<div id="box1"></div>
+</body>
+</html>
